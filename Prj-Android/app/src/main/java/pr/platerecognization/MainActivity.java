@@ -20,12 +20,16 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -38,7 +42,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-public class MainActivity extends Activity implements AlertDialog.OnClickListener,View.OnClickListener{
+public class MainActivity extends FragmentActivity implements AlertDialog.OnClickListener,View.OnClickListener{
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -67,6 +71,7 @@ public class MainActivity extends Activity implements AlertDialog.OnClickListene
     private static final int REQUEST_CODE_IMAGE_OP = 2;
     private static final int REQUEST_CODE_OP = 3;
     private Uri mPath;
+    final RxPermissions rxPermissions = new RxPermissions(this);
 
     Bitmap latestBitmap;
 
@@ -111,9 +116,6 @@ public class MainActivity extends Activity implements AlertDialog.OnClickListene
             e.printStackTrace();
         }
     }
-
-
-
 
 
     public void initRecognizer()
@@ -350,15 +352,6 @@ public class MainActivity extends Activity implements AlertDialog.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, permission)
-                != PackageManager.PERMISSION_GRANTED
-                ) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]
-                    {permission},123);
-
-        }
         btn = (Button)findViewById(R.id.button);
         recogBtn = (Button)findViewById(R.id.button_recog);
         findViewById(R.id.button_recog_now).setOnClickListener(this);
@@ -367,10 +360,17 @@ public class MainActivity extends Activity implements AlertDialog.OnClickListene
         sb = (SeekBar)findViewById(R.id.seek);
         runtimebox = (TextView)findViewById(R.id.textView3);
 
-
-        initRecognizer();
         btn.setOnClickListener(this);
         recogBtn.setOnClickListener(this);
+
+        rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                    if(granted) {
+                        initRecognizer();
+                    }else {
+                        Toast.makeText(this, "请开启相关权限", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 
@@ -403,19 +403,37 @@ public class MainActivity extends Activity implements AlertDialog.OnClickListene
         switch (view.getId()) {
 
             case R.id.button:
-                new AlertDialog.Builder(this)
-                        .setTitle("打开方式")
-                        .setItems(new String[]{"打开图片"}, this)
-                        .show();
+                rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .subscribe(granted -> {
+                            if(granted) {
+                                initRecognizer();
+                                new AlertDialog.Builder(this)
+                                        .setTitle("打开方式")
+                                        .setItems(new String[]{"打开图片"}, this)
+                                        .show();
+                            }else {
+                                Toast.makeText(this, "请开启相关权限", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                 break;
             case R.id.button_recog:
                if(latestBitmap!=null){
                    SimpleRecog(latestBitmap,sb.getProgress());
                }
                 break;
+           //实时识别
             case R.id.button_recog_now:
-                Intent intent = new Intent(this, CameraActivity.class);
-                startActivity(intent);
+                rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .subscribe(granted -> {
+                            if(granted) {
+                                initRecognizer();
+                                Intent intent = new Intent(this, CameraActivity.class);
+                                startActivity(intent);
+                            }else {
+                                Toast.makeText(this, "请开启相关权限", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                 break;
             default:
                 break;
