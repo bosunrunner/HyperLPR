@@ -19,6 +19,7 @@ namespace pr {
         fineMapping = new FineMapping(finemapping_prototxt, finemapping_caffemodel);
         plateSegmentation = new PlateSegmentation(segmentation_prototxt, segmentation_caffemodel);
         generalRecognizer = new CNNRecognizer(charRecognization_proto, charRecognization_caffemodel);
+        //新能源车牌识别
         segmentationFreeRecognizer =  new SegmentationFreeRecognizer(segmentationfree_proto,segmentationfree_caffemodel);
 
     }
@@ -29,6 +30,7 @@ namespace pr {
         delete fineMapping;
         delete plateSegmentation;
         delete generalRecognizer;
+        //新能源车牌识别
         delete segmentationFreeRecognizer;
 
 

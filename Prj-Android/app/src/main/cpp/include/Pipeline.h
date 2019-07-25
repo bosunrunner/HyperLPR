@@ -36,6 +36,7 @@ namespace pr{
                    std::string finemapping_prototxt,std::string finemapping_caffemodel,
                    std::string segmentation_prototxt,std::string segmentation_caffemodel,
                    std::string charRecognization_proto,std::string charRecognization_caffemodel,
+                   //新能源车牌识别
                    std::string segmentationfree_proto,std::string segmentationfree_caffemodel
         );
         ~PipelinePR();

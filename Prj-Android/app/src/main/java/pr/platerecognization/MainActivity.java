@@ -138,6 +138,7 @@ public class MainActivity extends FragmentActivity implements AlertDialog.OnClic
                 + File.separator+"CharacterRecognization.prototxt";
         String character_caffemodel=  sdcardPath
                 + File.separator+"CharacterRecognization.caffemodel";
+        //添加新能源车牌识别
         String segmentationfree_prototxt =  sdcardPath
                 + File.separator+"SegmenationFree-Inception.prototxt";
         String segmentationfree_caffemodel=  sdcardPath

@@ -113,6 +113,7 @@ Java_pr_platerecognization_PlateRecognition_InitPlateRecognizer(
     std::string segmentation_caffemodel_path = jstring2str(env, segmentation_caffemodel);
     std::string charRecognization_proto_path = jstring2str(env, charRecognization_proto);
     std::string charRecognization_caffemodel_path = jstring2str(env, charRecognization_caffemodel);
+    //新能源识别参数
     std::string segmentationfree_proto_path = jstring2str(env, segmentationfree_proto);
     std::string segmentationfree_caffemodel_path = jstring2str(env, segmentationfree_caffemodel);
 
@@ -121,8 +122,8 @@ Java_pr_platerecognization_PlateRecognition_InitPlateRecognizer(
                                             finemapping_prototxt_path, finemapping_caffemodel_path,
                                             segmentation_prototxt_path, segmentation_caffemodel_path,
                                             charRecognization_proto_path, charRecognization_caffemodel_path,
+                                            //新能源识别参数
                                             segmentationfree_proto_path, segmentationfree_caffemodel_path);
-
     return (jlong) PR;
 }
 
@@ -137,7 +138,7 @@ Java_pr_platerecognization_PlateRecognition_SimpleRecognization(
     cv::cvtColor(mRgb,rgb,cv::COLOR_RGBA2BGR);
 
 
-    //1表示SEGMENTATION_BASED_METHOD在方法里有说明
+    //1表示 SEGMENTATION_BASED_METHOD 在方法里有说明,该方法能够识别新能源车牌
     std::vector<pr::PlateInfo> list_res= PR->RunPiplineAsImage(rgb,pr::SEGMENTATION_FREE_METHOD);
 //    std::vector<pr::PlateInfo> list_res= PR->RunPiplineAsImage(rgb,1);
     std::string concat_results;
@@ -151,7 +152,6 @@ Java_pr_platerecognization_PlateRecognition_SimpleRecognization(
     concat_results = concat_results.substr(0,concat_results.size()-1);
 
     return env->NewStringUTF(concat_results.c_str());
-
 }
 
 /**
