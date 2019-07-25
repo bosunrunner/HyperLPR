@@ -1,210 +1,355 @@
-![logo_t](./demo_images/logo.png)
+![logo_t](./demo_images/Android 实时扫描.gif)
 
-## HyperLPR   高性能开源中文车牌识别框架
+## HyperLPR Android 新能源车牌识别、实时识别和识别区域的获取
 
-#### [![1](https://badge.fury.io/py/hyperlpr.svg "title")](https://pypi.org/project/hyperlpr/)[![1](https://img.shields.io/pypi/pyversions/hyperlpr.svg "title")](https://pypi.org/project/hyperlpr/)
+### Q&A
 
-### 一键安装
+Q：Android 选择新能源车牌号的图片进行识别，为什么识别不出来
 
-`pip install hyperlpr`
+A：可能和车牌号的拍摄角度、分辨率有关，尝试调节分辨率看看
 
-###### 支持python3,支持Windows  Mac Linux 树莓派等。
+Q：如何验证支持了新能源车牌号识别
 
-###### 720p cpu real-time (st on MBP r15 2.2GHz haswell).
+A：换用实时识别试试。
 
-#### 快速上手
 
-```python
-#导入包
-from hyperlpr import *
-#导入OpenCV库
-import cv2
-#读入图片
-image = cv2.imread("demo.jpg")
-#识别结果
-print(HyperLPR_PlateRecogntion(image))
+###  新能源车牌识别
+ ##### 1.将 Prj-Linux 项目下 model 中的文件全部 copy 到 Prj-Android 中 assets 的 pr 目录下
+ ##### 2.修改 MainActivity.java 的 initRecognizer() 方法
 ```
-
-#### Q&A
-
-Q：Android识别率没有所传demo apk的识别率高？
-
-A：请使用[Prj-Linux](https://github.com/zeusees/HyperLPR/tree/master/Prj-Linux/lpr/model)下的模型，android默认包里的配置是相对较早的模型
-
-Q：车牌的训练数据来源？
-
-A：由于用于训练车牌数据涉及到法律隐私等问题，本项目无法提供。开放较为大的数据集有[CCPD](https://github.com/detectRecog/CCPD)车牌数据集。
-
-Q：训练代码的提供？
-
-A：相关资源中有提供训练代码
-
-Q：关于项目的来源？
-
-A：此项目来源于作者早期的研究和调试代码，代码缺少一定的规范，同时也欢迎PR。
-
-
-
-#### 相关资源
-
-- [python配置教程](https://www.jianshu.com/p/7ab673abeaae)
-- [Linux下C++配置教程](https://blog.csdn.net/lu_linux/article/details/88707421)
-- [相关技术博客](http://blog.csdn.net/relocy/article/details/78705662)(技术文章会在接下来的几个月的时间内连续更新)。
-- [带UI界面的工程](https://pan.baidu.com/s/1cNWpK6)(感谢群内小伙伴的工作)。
-- [端到端(多标签分类)训练代码](https://github.com/LCorleone/hyperlpr-train_e2e)(感谢群内小伙伴的工作)。
-- [端到端(CTC)训练代码](https://github.com/armaab/hyperlpr-train)(感谢群内小伙伴工作)。
-
-### 更新
-
-- 更新Windows版本的Visual Studio 2015 工程至端到端模型（2019.07.03）
-- 更新基于端到端的IOS车牌识别工程。(2018.11.13)
-- 可通过pip一键安装、更新的新的识别模型、倾斜车牌校正算法、定位算法。(2018.08.11)
-- 提交新的端到端识别模型，进一步提高识别准确率(2018.08.03)
-- [增加PHP车牌识别工程@coleflowers](https://github.com/zeusees/HyperLPR/tree/master/Prj-PHP) (2018.06.20)
-- 添加了HyperLPR Lite 仅仅需160 行代码即可实现车牌识别(2018.3.12)
-- 感谢 sundyCoder [Android 字符分割版本](https://github.com/sundyCoder/hyperlpr4Android) 
-- 增加字符分割[训练代码和字符分割介绍](https://github.com/zeusees/HyperLPR-Training)(2018.1.)
-- 更新了Android实现，大幅提高准确率和速度 (骁龙835 (*720*x*1280*)  ~50ms )(2017.12.27)
-
-### TODO
-
-- 支持多种车牌以及双层
-- 支持大角度车牌
-- 轻量级识别模型
-
-### 特性
-
-- 速度快 720p,单核 Intel 2.2G CPU (MaBook Pro 2015)平均识别时间低于100ms
-- 基于端到端的车牌识别无需进行字符分割
-- 识别率高,卡口场景准确率在95%-97%左右
-- 轻量,总代码量不超1k行
-
-### 模型资源说明
-
-- cascade.xml  检测模型 - 目前效果最好的cascade检测模型
-- cascade_lbp.xml  召回率效果较好，但其错检太多
-- char_chi_sim.h5 Keras模型-可识别34类数字和大写英文字  使用14W样本训练 
-- char_rec.h5 Keras模型-可识别34类数字和大写英文字  使用7W样本训练 
-- ocr_plate_all_w_rnn_2.h5 基于CNN的序列模型
-- ocr_plate_all_gru.h5 基于GRU的序列模型从OCR模型修改，效果目前最好但速度较慢，需要20ms。
-- plate_type.h5 用于车牌颜色判断的模型
-- model12.h5 左右边界回归模型
-
-### 注意事项:
-
-- Win工程中若需要使用静态库，需单独编译
-- 本项目的C++实现和Python实现无任何关联，都为单独实现
-- 在编译C++工程的时候必须要使用OpenCV 3.3以上版本 (DNN 库)，否则无法编译 
-- 安卓工程编译ndk尽量采用14b版本
-
-### Python 依赖
-
-- Keras (>2.0.0)
-- Theano(>0.9) or Tensorflow(>1.1.x)
-- Numpy (>1.10)
-- Scipy (0.19.1)
-- OpenCV(>3.0)
-- Scikit-image (0.13.0)
-- PIL
-
-### CPP 依赖
-
-- Opencv 3.3 以上版本
-
-### Linux/Mac 编译
-
-- 仅需要的依赖OpenCV 3.3 (需要DNN框架)
-
-```bash
-cd Prj-Linux
-mkdir build 
-cd build
-cmake ../
-sudo make -j 
+public void initRecognizer()
+   {
+       String assetPath = "pr";
+       String sdcardPath = Environment.getExternalStorageDirectory()
+               + File.separator + assetPath;
+       copyFilesFromAssets(this, assetPath, sdcardPath);
+       String cascade_filename  =  sdcardPath
+           + File.separator+"cascade.xml";
+       String finemapping_prototxt  =  sdcardPath
+               + File.separator+"HorizonalFinemapping.prototxt";
+       String finemapping_caffemodel  =  sdcardPath
+               + File.separator+"HorizonalFinemapping.caffemodel";
+       String segmentation_prototxt =  sdcardPath
+               + File.separator+"Segmentation.prototxt";
+       String segmentation_caffemodel =  sdcardPath
+               + File.separator+"Segmentation.caffemodel";
+       String character_prototxt =  sdcardPath
+               + File.separator+"CharacterRecognization.prototxt";
+       String character_caffemodel=  sdcardPath
+               + File.separator+"CharacterRecognization.caffemodel";
+      //添加新能源车牌识别
+       String segmentationfree_prototxt =  sdcardPath
+               + File.separator+"SegmenationFree-Inception.prototxt";
+       String segmentationfree_caffemodel=  sdcardPath
+               + File.separator+"SegmenationFree-Inception.caffemodel";
+       handle  =  PlateRecognition.InitPlateRecognizer(
+               cascade_filename,
+               finemapping_prototxt,finemapping_caffemodel,
+               segmentation_prototxt,segmentation_caffemodel,
+               character_prototxt,character_caffemodel,
+               segmentationfree_prototxt,segmentationfree_caffemodel
+       );
+   }
 ```
+##### 3.修改 PlateRecognition.java
+```
+public class PlateRecognition {
+    static {
+        System.loadLibrary("hyperlpr");
+    }
+    static native long InitPlateRecognizer(String casacde_detection,
+                                           String finemapping_prototxt,String finemapping_caffemodel,
+                                           String segmentation_prototxt,String segmentation_caffemodel,
+                                           String charRecognization_proto,String charRecognization_caffemodel,
+                                           //添加新能源的参数
+                                           String segmentationfree_proto, String segmentationfree_caffemodel);
 
-### CPP demo
+    static native void ReleasePlateRecognizer(long  object);
+    static native String SimpleRecognization(long  inputMat,long object);
+}
+```
+##### 4.修改 javaWrapper.cpp 文件的以下两部分
+```
+extern "C" {
+JNIEXPORT jlong JNICALL
+Java_pr_platerecognization_PlateRecognition_InitPlateRecognizer(
+        JNIEnv *env, jobject obj,
+        jstring detector_filename,
+        jstring finemapping_prototxt, jstring finemapping_caffemodel,
+        jstring segmentation_prototxt, jstring segmentation_caffemodel,
+        jstring charRecognization_proto, jstring charRecognization_caffemodel,
+        jstring segmentationfree_proto, jstring segmentationfree_caffemodel) {
 
-```cpp
-#include "../include/Pipeline.h"
-int main(){
-    pr::PipelinePR prc("model/cascade.xml",
-                      "model/HorizonalFinemapping.prototxt","model/HorizonalFinemapping.caffemodel",
-                      "model/Segmentation.prototxt","model/Segmentation.caffemodel",
-                      "model/CharacterRecognization.prototxt","model/CharacterRecognization.caffemodel",
-                       "model/SegmentationFree.prototxt","model/SegmentationFree.caffemodel"
-                    );
-  //定义模型文件
+    std::string detector_path = jstring2str(env, detector_filename);
+    std::string finemapping_prototxt_path = jstring2str(env, finemapping_prototxt);
+    std::string finemapping_caffemodel_path = jstring2str(env, finemapping_caffemodel);
+    std::string segmentation_prototxt_path = jstring2str(env, segmentation_prototxt);
+    std::string segmentation_caffemodel_path = jstring2str(env, segmentation_caffemodel);
+    std::string charRecognization_proto_path = jstring2str(env, charRecognization_proto);
+    std::string charRecognization_caffemodel_path = jstring2str(env, charRecognization_caffemodel);
+    //新能源识别参数
+    std::string segmentationfree_proto_path = jstring2str(env, segmentationfree_proto);
+    std::string segmentationfree_caffemodel_path = jstring2str(env, segmentationfree_caffemodel);
 
-    cv::Mat image = cv::imread("test.png");
-    std::vector<pr::PlateInfo> res = prc.RunPiplineAsImage(image,pr::SEGMENTATION_FREE_METHOD);
-  //使用端到端模型模型进行识别 识别结果将会保存在res里面
- 
-    for(auto st:res) {
-        if(st.confidence>0.75) {
-            std::cout << st.getPlateName() << " " << st.confidence << std::endl;
-          //输出识别结果 、识别置信度
-            cv::Rect region = st.getPlateRect();
-          //获取车牌位置
- cv::rectangle(image,cv::Point(region.x,region.y),cv::Point(region.x+region.width,region.y+region.height),cv::Scalar(255,255,0),2);
-          //画出车牌位置
-          
-        }
+    pr::PipelinePR *PR = new pr::PipelinePR(detector_path,
+                                            finemapping_prototxt_path, finemapping_caffemodel_path,
+                                            segmentation_prototxt_path, segmentation_caffemodel_path,
+                                            charRecognization_proto_path, charRecognization_caffemodel_path,
+                                            //新能源识别参数
+                                            segmentationfree_proto_path, segmentationfree_caffemodel_path);
+    return (jlong) PR;
+}
+
+JNIEXPORT jstring JNICALL
+Java_pr_platerecognization_PlateRecognition_SimpleRecognization(
+        JNIEnv *env, jobject obj,
+        jlong matPtr, jlong object_pr) {
+    pr::PipelinePR *PR = (pr::PipelinePR *) object_pr;
+    cv::Mat &mRgb = *(cv::Mat *) matPtr;
+    cv::Mat rgb;
+    cv::cvtColor(mRgb,rgb,cv::COLOR_RGBA2BGR);
+
+
+    //1表示 SEGMENTATION_BASED_METHOD 在方法里有说明,该方法能够识别新能源车牌
+    std::vector<pr::PlateInfo> list_res= PR->RunPiplineAsImage(rgb,pr::SEGMENTATION_FREE_METHOD);
+//    std::vector<pr::PlateInfo> list_res= PR->RunPiplineAsImage(rgb,1);
+    std::string concat_results;
+    for(auto one:list_res)
+    {
+        //可信度
+        if (one.confidence>0.7)
+            concat_results+=one.getPlateName()+",";
     }
 
-    cv::imshow("image",image);
-    cv::waitKey(0);
-    return 0 ;
+    concat_results = concat_results.substr(0,concat_results.size()-1);
+
+    return env->NewStringUTF(concat_results.c_str());
+}
+```
+##### 5.打开 cpp.src 下 Pipeline.cpp 中的以下三处的注释
+```
+const int HorizontalPadding = 4;
+PipelinePR::PipelinePR(std::string detector_filename,
+                       std::string finemapping_prototxt, std::string finemapping_caffemodel,
+                       std::string segmentation_prototxt, std::string segmentation_caffemodel,
+                       std::string charRecognization_proto, std::string charRecognization_caffemodel,
+                       std::string segmentationfree_proto, std::string segmentationfree_caffemodel) {
+    plateDetection = new PlateDetection(detector_filename);
+    fineMapping = new FineMapping(finemapping_prototxt, finemapping_caffemodel);
+    plateSegmentation = new PlateSegmentation(segmentation_prototxt, segmentation_caffemodel);
+    generalRecognizer = new CNNRecognizer(charRecognization_proto, charRecognization_caffemodel);
+    //新能源车牌识别
+    segmentationFreeRecognizer =  new SegmentationFreeRecognizer(segmentationfree_proto,segmentationfree_caffemodel);
+}
+
+PipelinePR::~PipelinePR() {
+
+    delete plateDetection;
+    delete fineMapping;
+    delete plateSegmentation;
+    delete generalRecognizer;
+    //新能源车牌识别
+    delete segmentationFreeRecognizer;
+}
+```
+##### 6.打开 cpp.include 包下 Pipeline.h 文件中的注释
+```
+namespace pr{
+
+    const std::vector<std::string> CH_PLATE_CODE{"京", "沪", "津", "渝", "冀", "晋", "蒙", "辽", "吉", "黑", "苏", "浙", "皖", "闽", "赣", "鲁", "豫", "鄂", "湘", "粤", "桂",
+                                                 "琼", "川", "贵", "云", "藏", "陕", "甘", "青", "宁", "新", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A",
+                                                 "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
+                                                 "Y", "Z","港","学","使","警","澳","挂","军","北","南","广","沈","兰","成","济","海","民","航","空"};
+
+    const int SEGMENTATION_FREE_METHOD = 0;
+    const int SEGMENTATION_BASED_METHOD = 1;
+
+    class PipelinePR{
+    public:
+        GeneralRecognizer *generalRecognizer;
+        PlateDetection *plateDetection;
+        PlateSegmentation *plateSegmentation;
+        FineMapping *fineMapping;
+        SegmentationFreeRecognizer *segmentationFreeRecognizer;
+
+        PipelinePR(std::string detector_filename,
+                   std::string finemapping_prototxt,std::string finemapping_caffemodel,
+                   std::string segmentation_prototxt,std::string segmentation_caffemodel,
+                   std::string charRecognization_proto,std::string charRecognization_caffemodel,
+                   //新能源车牌识别
+                   std::string segmentationfree_proto,std::string segmentationfree_caffemodel
+        );
+        ~PipelinePR();
+
+        std::vector<std::string> plateRes;
+        std::vector<PlateInfo> RunPiplineAsImage(cv::Mat plateImage,int method);
+    };
+}
+#endif
+```
+
+### 获取识别区域的车牌号图片
+
+##### 1.在 cpp 包下的 CMakeLists.txt 配置文件中添加 jnigraphics 依赖库
+`target_link_libraries(hyperlpr jnigraphics ${OpenCV_LIBS})`
+
+##### 2.创建包含识别区域图片的对象 PlateInfo
+```
+public class PlateInfo {
+    /**
+     * 车牌号
+     */
+    public String plateName;
+    /**
+     * 车牌号图片
+     */
+    public Bitmap bitmap;
+    public PlateInfo() {
+    }
+    public PlateInfo(String plateName, Bitmap bitmap) {
+        this.plateName = plateName;
+        this.bitmap = bitmap;
+    }
 }
 ```
 
-###  
+##### 3.在 PlateRecognition 类中添加获取车牌号识别区域图片的接口
+```
+public class PlateRecognition {
+    static {
+        System.loadLibrary("hyperlpr");
+    }
+    static native long InitPlateRecognizer(String casacde_detection,
+                                           String finemapping_prototxt,String finemapping_caffemodel,
+                                           String segmentation_prototxt,String segmentation_caffemodel,
+                                           String charRecognization_proto,String charRecognization_caffemodel,
+                                           //添加新能源的参数
+                                           String segmentationfree_proto, String segmentationfree_caffemodel);
 
-### 可识别和待支持的车牌的类型
+    static native void ReleasePlateRecognizer(long  object);
+    static native String SimpleRecognization(long  inputMat,long object);
+    /**
+     * 获取识别区域的车牌号图片
+     * @param inputMat
+     * @param object
+     * @return
+     */
+    static native PlateInfo PlateInfoRecognization(long  inputMat,long object);
+}
+```
 
-- [x] 单行蓝牌
-- [x] 单行黄牌
-- [x] 新能源车牌
-- [x] 白色警用车牌
-- [x] 使馆/港澳车牌
-- [x] 教练车牌
-- [ ] 武警车牌
-- [ ] 民航车牌
-- [ ] 双层黄牌
-- [ ] 双层武警
-- [ ] 双层军牌
-- [ ] 双层农用车牌
-- [ ] 双层个性化车牌
+##### 4.在原生代码开发中添加实现方法 javaWrapper.cpp 文件中添加如下方法
+```
+/**
+ * Mat 转 Bitmap
+ */
+jobject mat_to_bitmap(JNIEnv * env, Mat & src, bool needPremultiplyAlpha, jobject bitmap_config){
 
-###### Note:由于训练的时候样本存在一些不均衡的问题,一些特殊车牌存在一定识别率低下的问题，如(使馆/港澳车牌)，会在后续的版本进行改进。
+    jclass java_bitmap_class = (jclass)env->FindClass("android/graphics/Bitmap");
+    jmethodID mid = env->GetStaticMethodID(java_bitmap_class,
+                                           "createBitmap", "(IILandroid/graphics/Bitmap$Config;)Landroid/graphics/Bitmap;");
 
-### 测试样例
+    jobject bitmap = env->CallStaticObjectMethod(java_bitmap_class,
+                                                 mid, src.size().width, src.size().height, bitmap_config);
+    AndroidBitmapInfo  info;
+    void* pixels = 0;
 
-![image](./demo_images/demo1.png)
+    try {
+        //validate
+        CV_Assert(AndroidBitmap_getInfo(env, bitmap, &info) >= 0);
+        CV_Assert(src.type() == CV_8UC1 || src.type() == CV_8UC3 || src.type() == CV_8UC4);
+        CV_Assert(AndroidBitmap_lockPixels(env, bitmap, &pixels) >= 0);
+        CV_Assert(pixels);
 
-![image](./demo_images/demo2.jpg)
+        //type mat
+        if(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888){
+            Mat tmp(info.height, info.width, CV_8UC4, pixels);
+            if(src.type() == CV_8UC1){
+                cvtColor(src, tmp, CV_GRAY2RGBA);
+            } else if(src.type() == CV_8UC3){
+                cvtColor(src, tmp, CV_RGB2RGBA);
+            } else if(src.type() == CV_8UC4){
+                if(needPremultiplyAlpha){
+                    cvtColor(src, tmp, COLOR_RGBA2mRGBA);
+                }else{
+                    src.copyTo(tmp);
+                }
+            }
 
-#### Android示例
+        } else{
+            Mat tmp(info.height, info.width, CV_8UC2, pixels);
+            if(src.type() == CV_8UC1){
+                cvtColor(src, tmp, CV_GRAY2BGR565);
+            } else if(src.type() == CV_8UC3){
+                cvtColor(src, tmp, CV_RGB2BGR565);
+            } else if(src.type() == CV_8UC4){
+                cvtColor(src, tmp, CV_RGBA2BGR565);
+            }
+        }
+        AndroidBitmap_unlockPixels(env, bitmap);
+        return bitmap;
+    } catch(cv::Exception e){
+        AndroidBitmap_unlockPixels(env, bitmap);
+        jclass je = env->FindClass("org/opencv/core/CvException");
+        if(!je) je = env->FindClass("java/lang/Exception");
+        env->ThrowNew(je, e.what());
+        return bitmap;
+    } catch (...){
+        AndroidBitmap_unlockPixels(env, bitmap);
+        jclass je = env->FindClass("java/lang/Exception");
+        env->ThrowNew(je, "Unknown exception in JNI code {nMatToBitmap}");
+        return bitmap;
+    }
+}
 
-![android](./demo_images/android.png)
+/**
+ * 车牌号的详细信息
+ * @param env
+ * @param obj
+ * @param matPtr
+ * @param object_pr
+ * @return
+ */
+JNIEXPORT jobject JNICALL
+Java_pr_platerecognization_PlateRecognition_PlateInfoRecognization(
+        JNIEnv *env, jobject obj,
+        jlong matPtr, jlong object_pr) {
+    jclass plateInfo_class = env -> FindClass("pr/platerecognization/PlateInfo");
+    jmethodID mid = env->GetMethodID(plateInfo_class,"<init>","()V");
+    jobject plateInfoObj   = env->NewObject(plateInfo_class,mid);
 
-### 识别测试APP
+    pr::PipelinePR *PR = (pr::PipelinePR *) object_pr;
+    cv::Mat &mRgb = *(cv::Mat *) matPtr;
+    cv::Mat rgb;
+    cv::cvtColor(mRgb,rgb,cv::COLOR_RGBA2BGR);
 
-- 体验 Android APP：[https://fir.im/HyperLPR](https://fir.im/HyperLPR) (根据图片尺寸调整程序中的尺度，提高准确率)
+    //1表示SEGMENTATION_BASED_METHOD在方法里有说明
+    std::vector<pr::PlateInfo> list_res= PR->RunPiplineAsImage(rgb,pr::SEGMENTATION_FREE_METHOD);
+    std::string concat_results;
+    pr::PlateInfo plateInfo;
+    for(auto one:list_res)
+    {
+        //可信度
+        if (one.confidence>0.7) {
+            plateInfo = one;
+            //车牌号
+            jfieldID fid_plate_name  = env->GetFieldID(plateInfo_class,"plateName","Ljava/lang/String;");
+            env->SetObjectField(plateInfoObj,fid_plate_name,env->NewStringUTF(plateInfo.getPlateName().c_str()));
 
-#### 获取帮助
+            //识别区域
+            Mat src = plateInfo.getPlateImage();
 
-- HyperLPR讨论QQ群1: 673071218, 群2: 746123554(已满) ,加前请备注HyperLPR交流。
+            jclass java_bitmap_class = (jclass)env->FindClass("android/graphics/Bitmap$Config");
+            jmethodID bitmap_mid = env->GetStaticMethodID(java_bitmap_class,
+                                                          "nativeToConfig", "(I)Landroid/graphics/Bitmap$Config;");
+            jobject bitmap_config = env->CallStaticObjectMethod(java_bitmap_class, bitmap_mid, 5);
 
-### 作者和贡献者信息：
-
-##### 作者昵称不分前后
-
-- Jack Yu 作者(jack-yu-business@foxmail.com / https://github.com/szad670401)
-- lsy17096535 整理(https://github.com/lsy17096535)
-- xiaojun123456 IOS贡献(https://github.com/xiaojun123456)
-- sundyCoder Android第三方贡献(https://github.com/sundyCoder)
-- coleflowers php贡献(@coleflowers)
-- Free&Easy 资源贡献 
-- 海豚嘎嘎 LBP cascade检测器训练
-- Windows工程端到端模型 (https://github.com/SalamanderEyes)
+            jfieldID fid_bitmap = env->GetFieldID(plateInfo_class, "bitmap","Landroid/graphics/Bitmap;");
+            jobject _bitmap = mat_to_bitmap(env, src, false, bitmap_config);
+            env->SetObjectField(plateInfoObj,fid_bitmap, _bitmap);
+            return plateInfoObj;
+        }
+    }
+    return plateInfoObj;
+}
+```
