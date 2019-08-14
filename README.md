@@ -1,4 +1,4 @@
-![logo_t](./demo_images/Android 实时扫描.gif)
+![logo_t](https://github.com/lxhAndSmh/HyperLPR/blob/master/demo_images/Android%20%E5%AE%9E%E6%97%B6%E6%89%AB%E6%8F%8F.gif)
 
 ## HyperLPR Android 新能源车牌识别、实时识别和识别区域的获取
 
