@@ -152,6 +152,7 @@ public class MainActivity extends FragmentActivity implements AlertDialog.OnClic
         );
 
 
+        Log.d("onPreviewFrame", "handle====" + handle);
     }
 
     /**
@@ -407,7 +408,9 @@ public class MainActivity extends FragmentActivity implements AlertDialog.OnClic
                 rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         .subscribe(granted -> {
                             if(granted) {
-                                initRecognizer();
+                                if(handle == 0) {
+                                    initRecognizer();
+                                }
                                 new AlertDialog.Builder(this)
                                         .setTitle("打开方式")
                                         .setItems(new String[]{"打开图片"}, this)
@@ -427,7 +430,9 @@ public class MainActivity extends FragmentActivity implements AlertDialog.OnClic
                 rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         .subscribe(granted -> {
                             if(granted) {
-                                initRecognizer();
+                                if(handle == 0) {
+                                    initRecognizer();
+                                }
                                 Intent intent = new Intent(this, CameraActivity.class);
                                 startActivity(intent);
                             }else {
